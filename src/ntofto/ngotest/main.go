@@ -1,6 +1,6 @@
 package main
 
-import "ntofto/ngotest/lib/ngotest"
+import "ntofto/ngotest/hello"
 
 func main() {
 	hello.World()

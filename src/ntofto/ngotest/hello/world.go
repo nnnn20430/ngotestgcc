@@ -1,8 +1,9 @@
 package hello
 
 import "fmt"
-import "ngotestlib"
+import "ntofto/ngotestlib"
 
 func World() {
 	fmt.Printf(ngotestlib.HelloString)
+	newline()
 }
