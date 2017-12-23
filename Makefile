@@ -1,20 +1,27 @@
 define SRCS :=
-	ntofto/lib/ngotest.go
-	ntofto/main.go
+	ntofto/ngotest/lib/ngotest.go
+	ntofto/ngotest/main.go
 endef
-OBJS := $(addprefix objs/, $(SRCS:.go=.o))
+OBJS := $(addprefix obj/, $(SRCS:.go=.o))
 MAIN := ngotest
 
-.PHONY: all clean $(MAIN)
+.PHONY: all clean ext $(MAIN) FORCE
 
-all: $(MAIN)
+all: ext $(MAIN)
 
 clean:
-	rm -rf objs/*
+	rm -rf $(wildcard bin/* obj/*)
+	@$(MAKE) -C ext clean
+
+ext:
+	@$(MAKE) -C ext
 
 $(MAIN): $(OBJS)
-	gccgo -static -o objs/$@ $^
+	@mkdir -p bin
+	gccgo -static -o bin/$@ $^ $(wildcard ext/lib/*.a)
 
-objs/%.o: src/%.go
+obj/%.o: src/%.go FORCE
 	@mkdir -p $(dir $@)
-	gccgo -c -B objs -o $@ $^
+	gccgo -B ext/lib -B obj -c -o $@ $<
+
+FORCE:
