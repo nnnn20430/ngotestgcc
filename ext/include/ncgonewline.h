@@ -1,0 +1,1 @@
+void ncgotest_newline();

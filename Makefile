@@ -8,16 +8,20 @@ MAIN := ngotest
 
 .NOTPARALLEL:
 
-.PHONY: all clean $(MAIN) FORCE
+.PHONY: all clean ext $(MAIN) FORCE
 
-all: $(MAIN)
+all: ext $(MAIN)
 
 clean:
 	rm -rf bin obj
+	@$(MAKE) -C ext clean
+
+ext:
+	@$(MAKE) -C ext
 
 $(MAIN): $(OBJS)
 	@mkdir -p bin
-	gccgo -static -o bin/$@ $^
+	gccgo -static -o bin/$@ $^ $(wildcard ext/lib/*.a)
 
 obj/%.o: src/% FORCE
 	@mkdir -p $(dir $@)
