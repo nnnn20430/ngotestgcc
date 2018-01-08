@@ -6,6 +6,8 @@ endef
 OBJS := $(addprefix obj/, $(PKGS:%=%.o))
 MAIN := ngotest
 
+.NOTPARALLEL:
+
 .PHONY: all clean $(MAIN) FORCE
 
 all: $(MAIN)
