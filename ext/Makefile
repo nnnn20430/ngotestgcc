@@ -1,28 +1,16 @@
-ifeq ($(origin CC), default)
-CC = gcc
-endif
-CFLAGS ?= -Wall
-INCLUDES ?= -Iinclude/
-ifeq ($(origin ARFLAGS), default)
-ARFLAGS = rcsv
-endif
-SRCS := $(shell find src -type f -name '*.c' -printf '%P\n')
-OBJS := $(addprefix obj/, $(SRCS:.c=.o))
-MAIN := ncgotest
+.PHONY: all clean ncgotest ngotestlib FORCE
 
-.PHONY: all clean $(MAIN) FORCE
+all: build_ncgotest build_ngotestlib
+	@mkdir lib
+	ln -s ../ncgotest/lib/libncgotest.a lib/libncgotest.a
+	ln -s ../ngotestlib/lib/libngotestlib.a lib/libngotestlib.a
+	ln -nfs ngotestlib/include include
 
-all: $(MAIN)
+clean: clean_ncgotest clean_ngotestlib
+	rm -rf lib include
 
-clean:
-	rm -rf lib obj
+build_%:
+	@$(MAKE) -C $(@:build_%=%)
 
-$(MAIN): $(OBJS)
-	@mkdir -p lib
-	$(AR) $(ARFLAGS) lib/lib$(@).a $^
-
-obj/%.o: src/%.c FORCE
-	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) $(INCLUDES) -c -o $@ $<
-
-FORCE:
+clean_%:
+	@$(MAKE) -C $(@:clean_%=%) clean

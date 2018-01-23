@@ -1,5 +1,4 @@
 define PKGS :=
-	ntofto/ngotestlib
 	ntofto/ngotest/hello
 	ntofto/ngotest
 endef
@@ -25,6 +24,6 @@ $(MAIN): $(OBJS)
 
 obj/%.o: src/% FORCE
 	@mkdir -p $(dir $@)
-	gccgo -I obj -c -o $@ $(wildcard $(<)/*.go)
+	gccgo -I obj -I ext/include -c -o $@ $(wildcard $(<)/*.go)
 
 FORCE:
